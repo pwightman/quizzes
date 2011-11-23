@@ -1,0 +1,40 @@
+ruby-1.9.2-p290 :001 > Teacher.create!(:name => "Alice")
+  SQL (29.6ms)  INSERT INTO "teachers" ("created_at", "name", "updated_at") VALUES (?, ?, ?)  [["created_at", Wed, 23 Nov 2011 00:49:36 UTC +00:00], ["name", "Alice"], ["updated_at", Wed, 23 Nov 2011 00:49:36 UTC +00:00]]
+ => #<Teacher id: 1, name: "Alice", created_at: "2011-11-23 00:49:36", updated_at: "2011-11-23 00:49:36"> 
+ruby-1.9.2-p290 :002 > t = Teacher.first
+  Teacher Load (0.3ms)  SELECT "teachers".* FROM "teachers" LIMIT 1
+ => #<Teacher id: 1, name: "Alice", created_at: "2011-11-23 00:49:36", updated_at: "2011-11-23 00:49:36"> 
+ruby-1.9.2-p290 :003 > t.quizzes
+  Quiz Load (0.2ms)  SELECT "quizzes".* FROM "quizzes" WHERE "quizzes"."teacher_id" = 1
+ => [] 
+ruby-1.9.2-p290 :006 > t.quizzes.create!(:question => "How old am I?", :correct_option => "13", :option_1 => "23", :option_2 => "24", :option_3 => "29")
+  SQL (0.8ms)  INSERT INTO "quizzes" ("correct_option", "created_at", "option_1", "option_2", "option_3", "question", "teacher_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?)  [["correct_option", "13"], ["created_at", Wed, 23 Nov 2011 00:51:30 UTC +00:00], ["option_1", "23"], ["option_2", "24"], ["option_3", "29"], ["question", "How old am I?"], ["teacher_id", 1], ["updated_at", Wed, 23 Nov 2011 00:51:30 UTC +00:00]]
+ => #<Quiz id: 1, teacher_id: 1, question: "How old am I?", correct_option: "13", option_1: "23", option_2: "24", option_3: "29", created_at: "2011-11-23 00:51:30", updated_at: "2011-11-23 00:51:30"> 
+ruby-1.9.2-p290 :007 > t.quizzes
+ => [#<Quiz id: 1, teacher_id: 1, question: "How old am I?", correct_option: "13", option_1: "23", option_2: "24", option_3: "29", created_at: "2011-11-23 00:51:30", updated_at: "2011-11-23 00:51:30">] 
+ruby-1.9.2-p290 :008 > t.quizzes true
+  Quiz Load (0.3ms)  SELECT "quizzes".* FROM "quizzes" WHERE "quizzes"."teacher_id" = 1
+ => [#<Quiz id: 1, teacher_id: 1, question: "How old am I?", correct_option: "13", option_1: "23", option_2: "24", option_3: "29", created_at: "2011-11-23 00:51:30", updated_at: "2011-11-23 00:51:30">] 
+ruby-1.9.2-p290 :009 > s = Student.create!(:name => "George")
+  SQL (0.5ms)  INSERT INTO "students" ("created_at", "name", "updated_at") VALUES (?, ?, ?)  [["created_at", Wed, 23 Nov 2011 00:52:06 UTC +00:00], ["name", "George"], ["updated_at", Wed, 23 Nov 2011 00:52:06 UTC +00:00]]
+ => #<Student id: 1, name: "George", created_at: "2011-11-23 00:52:06", updated_at: "2011-11-23 00:52:06"> 
+ruby-1.9.2-p290 :010 > s.quizzes
+  Quiz Load (0.4ms)  SELECT "quizzes".* FROM "quizzes" INNER JOIN "quiz_takens" ON "quizzes"."id" = "quiz_takens"."quiz_id" WHERE "quiz_takens"."student_id" = 1
+ => [] 
+ruby-1.9.2-p290 :011 > q = Quiz.first
+  Quiz Load (0.3ms)  SELECT "quizzes".* FROM "quizzes" LIMIT 1
+ => #<Quiz id: 1, teacher_id: 1, question: "How old am I?", correct_option: "13", option_1: "23", option_2: "24", option_3: "29", created_at: "2011-11-23 00:51:30", updated_at: "2011-11-23 00:51:30"> 
+ruby-1.9.2-p290 :012 > s
+ => #<Student id: 1, name: "George", created_at: "2011-11-23 00:52:06", updated_at: "2011-11-23 00:52:06"> 
+ruby-1.9.2-p290 :013 > q
+ => #<Quiz id: 1, teacher_id: 1, question: "How old am I?", correct_option: "13", option_1: "23", option_2: "24", option_3: "29", created_at: "2011-11-23 00:51:30", updated_at: "2011-11-23 00:51:30"> 
+ruby-1.9.2-p290 :014 > QuizTaken.create!(:student_id => s.id, :quiz_id => q.id, :score => 1)
+  SQL (0.7ms)  INSERT INTO "quiz_takens" ("created_at", "quiz_id", "score", "student_id", "updated_at") VALUES (?, ?, ?, ?, ?)  [["created_at", Wed, 23 Nov 2011 00:53:22 UTC +00:00], ["quiz_id", 1], ["score", 1], ["student_id", 1], ["updated_at", Wed, 23 Nov 2011 00:53:22 UTC +00:00]]
+ => #<QuizTaken id: 1, quiz_id: 1, student_id: 1, score: 1, created_at: "2011-11-23 00:53:22", updated_at: "2011-11-23 00:53:22"> 
+ruby-1.9.2-p290 :015 > s.quizzes true
+  Quiz Load (0.5ms)  SELECT "quizzes".* FROM "quizzes" INNER JOIN "quiz_takens" ON "quizzes"."id" = "quiz_takens"."quiz_id" WHERE "quiz_takens"."student_id" = 1
+ => [#<Quiz id: 1, teacher_id: 1, question: "How old am I?", correct_option: "13", option_1: "23", option_2: "24", option_3: "29", created_at: "2011-11-23 00:51:30", updated_at: "2011-11-23 00:51:30">] 
+ruby-1.9.2-p290 :016 > s.quiz_takens
+  QuizTaken Load (0.2ms)  SELECT "quiz_takens".* FROM "quiz_takens" WHERE "quiz_takens"."student_id" = 1
+ => [#<QuizTaken id: 1, quiz_id: 1, student_id: 1, score: 1, created_at: "2011-11-23 00:53:22", updated_at: "2011-11-23 00:53:22">] 
+ruby-1.9.2-p290 :017 > 
